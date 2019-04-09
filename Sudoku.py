@@ -32,15 +32,17 @@ def check(puzzle,ctr):
   [60,61,62,69,70,71,78,79,80]\
   ]
   
-  badplaces = {}
-  badnums = {}
+  badplaces = {0}
+  badnums = {0}
+  badplaces.remove(0)
+  badnums.remove(0)
 
   #badplaces gives locations where ctr is part of the same clique
   for k in Cliques:
     if ctr in k:
       for places in k:
         if places != ctr:
-          badplaces.add(num)
+          badplaces.add(places)
           
   #gives all badnums based on bad places in puzzle
   for a in badplaces:
@@ -55,6 +57,8 @@ def Sudoku(stack):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
   #if stack is 80, bad
+  if stack == None:
+    return
   if len(stack) == 80:
     return stack[80]
   #gets current puzzle
@@ -89,11 +93,12 @@ def Process(infile):
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
-      print( Sudoku([ board ]) )
+      #print(board)
+      print( Sudoku( [ board ] ) )
     if len(ctr) < 5:
       stop = 0
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
 
- main()
+main()
