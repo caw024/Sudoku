@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import time
   
 #ctr tells you first occurence of '_'
 def check(puzzle,ctr):
@@ -106,11 +107,19 @@ def Process(infile):
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
-      print( Sudoku( [ board ] ) )
+      start = time.time()
+      Sudoku( [ board ] )
+      totaltime = time.time()-start
+      print("totaltime: " + str(totaltime) + " seconds")
       print("\n*******************************\n")
-    if len(ctr) < 5:
+    if len(ctr) < 2:
       stop = 0
       board = []
+    elif len(ctr) == 3:
+      retstr = ''
+      for k in ctr:
+        retstr += k + " "
+      print(retstr)
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
