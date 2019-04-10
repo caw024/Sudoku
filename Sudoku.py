@@ -48,37 +48,50 @@ def check(puzzle,ctr):
   for a in badplaces:
     if puzzle[a] != '_':
       badnums.add(puzzle[a])
-  possible = {1,2,3,4,5,6,7,8,9}
+  possible = {'1','2','3','4','5','6','7','8','9'}
   return possible.difference(badnums)
 
+
+def printSudoku(puzzle):
+  ctr = 0
+  while ctr < 73:
+    print( puzzle[ctr:ctr+9] )
+    ctr += 9
 
   
 def Sudoku(stack):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
-  #if stack is 80, bad
-  if stack == None:
-    return
-  if len(stack) == 80:
-    return stack[80]
+  #if stack == None:
+    #print('fuck up')
+    #return False
+  if len(stack) == 0:
+    return False
+    
   #gets current puzzle
   currentpuzzle = stack[len(stack)-1]
   ctr = 0
   #gets first occurence of _
-  while currentpuzzle[ctr] != '_':
+  while ctr < 81 and currentpuzzle[ctr] != '_':
     ctr += 1
+  if ctr == 81:
+    printSudoku(currentpuzzle)
+    return True
   #gets set of possibilities
-  set = check(currentpuzzle,ctr)
+  goodset = check(currentpuzzle,ctr)
   #if set is 0, del possibility, Sudoku keeps moving on with possibilities
-  if len(set) == 0:
-    del stack[len(stack)-1]
-    return
+  if len(goodset) == 0:
+    return False
   else:
     #go through the possibilities and try every single one
-    for k in set:
-      newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr:]
+    for k in goodset:
+      newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
       tempstack = stack[:]
-      Sudoku(tempstack.append(newpuzzle))
+      tempstack.append(newpuzzle)
+      #print("size of temp stack: " + str(len(tempstack)))
+      if Sudoku(tempstack) == True:
+        return
+        
 
 
 def main():
@@ -93,10 +106,11 @@ def Process(infile):
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
-      #print(board)
       print( Sudoku( [ board ] ) )
+      print("\n*******************************\n")
     if len(ctr) < 5:
       stop = 0
+      board = []
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
