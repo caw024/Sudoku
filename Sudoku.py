@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 import sys
 import time
-  
+
+backtrack = 0
+
 #ctr tells you first occurence of '_'
 def check(puzzle,ctr):
   Cliques=[[0,1,2,3,4,5,6,7,8],\
@@ -63,9 +65,6 @@ def printSudoku(puzzle):
 def Sudoku(stack):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
-  #if stack == None:
-    #print('fuck up')
-    #return False
   if len(stack) == 0:
     return False
     
@@ -86,14 +85,16 @@ def Sudoku(stack):
   else:
     #go through the possibilities and try every single one
     for k in goodset:
+      global backtrack
+      backtrack += 1
       newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
       tempstack = stack[:]
       tempstack.append(newpuzzle)
       #print("size of temp stack: " + str(len(tempstack)))
       if Sudoku(tempstack) == True:
+        print("backtrack: " + str(backtrack))
         return
         
-
 
 def main():
   Process(sys.argv[1])
@@ -113,6 +114,8 @@ def Process(infile):
       print("totaltime: " + str(totaltime) + " seconds")
       print("\n*******************************\n")
     if len(ctr) < 2:
+      global backtrack
+      backtrack = 0
       stop = 0
       board = []
     elif len(ctr) == 3:
