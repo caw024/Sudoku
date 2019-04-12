@@ -55,18 +55,21 @@ def check(puzzle,ctr):
   return possible.difference(badnums)
 
 
-def printSudoku(puzzle):
+def retSudoku(puzzle):
   ctr = 0
-  while ctr < 73:
-    print( puzzle[ctr:ctr+9] )
+  retstr = ""
+  while ctr < 75:
+    print( ",".join(puzzle[ctr:ctr+9]) )
+    #retstr += ",".join(puzzle[ctr:ctr+9]) + "\n"
     ctr += 9
+  return retstr
 
   
 def Sudoku(stack):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
   if len(stack) == 0:
-    return False, None
+    return False
     
   #gets current puzzle
   currentpuzzle = stack[len(stack)-1]
@@ -76,13 +79,13 @@ def Sudoku(stack):
     ctr += 1
   #return boolean and associated puzzle
   if ctr == 81:
-    printSudoku(currentpuzzle)
-    return True, currentpuzzle
+    #print(retSudoku(currentpuzzle))
+    return True
   #gets set of possibilities
   goodset = check(currentpuzzle,ctr)
   #if set is 0, del possibility, Sudoku keeps moving on with possibilities
   if len(goodset) == 0:
-    return False, None
+    return False
   else:
     #go through the possibilities and try every single one
     for k in goodset:
@@ -92,12 +95,15 @@ def Sudoku(stack):
       tempstack = stack[:]
       tempstack.append(newpuzzle)
       #print("size of temp stack: " + str(len(tempstack)))
-      #before it was if Sudoku(tempstack) == true:
-      #print(backtrack) and Return _ to end it
-      x,y = Sudoku(tempstack)
-      if x == True:
-        print("backtrack: " + str(backtrack))
-        return y
+
+      #print(x,y)
+      if Sudoku(tempstack) == True:
+        return retSudoku(tempstack)
+      #x,y = Sudoku(tempstack)
+      #print(x,y)
+      #if x == True:
+        #print("backtrack: " + str(backtrack))
+        #return
         
 
 def main():
@@ -109,26 +115,26 @@ def Process(infile):
   f.close()
   board = []
   stop = 0
+  retstr = ""
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
       start = time.time()
-      Sudoku( [ board ] )
+      Sudoku( [board] )
       totaltime = time.time()-start
-      print("totaltime: " + str(totaltime) + " seconds")
-      print("\n*******************************\n")
+      #print("totaltime: " + str(totaltime) + " seconds")
+      #print("\n*******************************\n")
     if len(ctr) < 2:
       global backtrack
       backtrack = 0
       stop = 0
       board = []
     elif len(ctr) == 3:
-      retstr = ''
-      for k in ctr:
-        retstr += k + " "
-      print(retstr)
+      retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
+  print(retstr)
+  return retstr
 
 main()
