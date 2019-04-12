@@ -74,6 +74,7 @@ def Sudoku(stack):
   #gets first occurence of _
   while ctr < 81 and currentpuzzle[ctr] != '_':
     ctr += 1
+  #return boolean and associated puzzle
   if ctr == 81:
     printSudoku(currentpuzzle)
     return True
