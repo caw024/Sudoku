@@ -66,7 +66,7 @@ def Sudoku(stack):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
   if len(stack) == 0:
-    return False
+    return False, None
     
   #gets current puzzle
   currentpuzzle = stack[len(stack)-1]
@@ -77,12 +77,12 @@ def Sudoku(stack):
   #return boolean and associated puzzle
   if ctr == 81:
     printSudoku(currentpuzzle)
-    return True
+    return True, currentpuzzle
   #gets set of possibilities
   goodset = check(currentpuzzle,ctr)
   #if set is 0, del possibility, Sudoku keeps moving on with possibilities
   if len(goodset) == 0:
-    return False
+    return False, None
   else:
     #go through the possibilities and try every single one
     for k in goodset:
@@ -92,9 +92,12 @@ def Sudoku(stack):
       tempstack = stack[:]
       tempstack.append(newpuzzle)
       #print("size of temp stack: " + str(len(tempstack)))
-      if Sudoku(tempstack) == True:
+      #before it was if Sudoku(tempstack) == true:
+      #print(backtrack) and Return _ to end it
+      x,y = Sudoku(tempstack)
+      if x == True:
         print("backtrack: " + str(backtrack))
-        return
+        return y
         
 
 def main():
