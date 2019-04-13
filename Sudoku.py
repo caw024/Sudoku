@@ -3,6 +3,7 @@ import sys
 import time
 
 backtrack = 0
+finalstr = ""
 
 
 #ctr tells you first occurence of '_'
@@ -60,8 +61,8 @@ def retSudoku(puzzle):
   ctr = 0
   retstr = ""
   while ctr < 75:
-    print( ",".join(puzzle[ctr:ctr+9]) )
-    #retstr += ",".join(puzzle[ctr:ctr+9]) + "\n"
+    #print( ",".join(puzzle[ctr:ctr+9]) )
+    retstr += ",".join(puzzle[ctr:ctr+9]) + "\n"
     ctr += 9
   return retstr
 
@@ -80,7 +81,8 @@ def Sudoku(stack):
     ctr += 1
   #return boolean and associated puzzle
   if ctr == 81:
-    #print(retSudoku(currentpuzzle))
+    global finalstr
+    finalstr += retSudoku(currentpuzzle)
     return True
   #gets set of possibilities
   goodset = check(currentpuzzle,ctr)
@@ -99,7 +101,7 @@ def Sudoku(stack):
 
       #print(x,y)
       if Sudoku(tempstack) == True:
-        return retSudoku(tempstack)
+        return
       #x,y = Sudoku(tempstack)
       #print(x,y)
       #if x == True:
@@ -122,6 +124,9 @@ def Process(infile):
     if stop == 9:
       start = time.time()
       Sudoku( [board] )
+      global finalstr
+      retstr += finalstr + "\n"
+      finalstr = ""
       totaltime = time.time()-start
       #print("totaltime: " + str(totaltime) + " seconds")
       #print("\n*******************************\n")
