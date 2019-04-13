@@ -110,9 +110,9 @@ def Sudoku(stack):
         
 
 def main():
-  Process(sys.argv[1])
+  Process(sys.argv[1], sys.argv[2])
   
-def Process(infile):
+def Process(infile,outfile):
   f = open(infile,'r')
   lines = f.read().split('\n')
   f.close()
@@ -140,7 +140,8 @@ def Process(infile):
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
-  print(retstr)
-  return retstr
+    g = open(outfile,'w')
+    g.write(retstr)
+    g.close()
 
 main()

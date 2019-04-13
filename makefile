@@ -1,2 +1,2 @@
 run: Sudoku.py
-	python3 Sudoku.py Sudoku-boards.txt
+	python3 Sudoku.py Sudoku-boards.txt output.txt
