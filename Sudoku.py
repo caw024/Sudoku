@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import sys
-import time
 
 backtrack = 0
 finalstr = ""
@@ -94,6 +93,7 @@ def Sudoku(stack):
     for k in goodset:
       global backtrack
       backtrack += 1
+      #print(backtrack)
       newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
       tempstack = stack[:]
       tempstack.append(newpuzzle)
@@ -122,12 +122,15 @@ def Process(infile,outfile):
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
-      start = time.time()
+      #start = time.time()
       Sudoku( [board] )
       global finalstr
       retstr += finalstr + "\n"
       finalstr = ""
-      totaltime = time.time()-start
+      #global backtrack
+      #retstr += str(backtrack)+  "\n"
+
+      #totaltime = time.time()-start
       #print("totaltime: " + str(totaltime) + " seconds")
       #print("\n*******************************\n")
     if len(ctr) < 2:
@@ -136,12 +139,14 @@ def Process(infile,outfile):
       stop = 0
       board = []
     elif len(ctr) == 3:
-      retstr += ",".join(ctr) + "\n"
+      pass
+      #retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
-    g = open(outfile,'w')
-    g.write(retstr)
-    g.close()
+
+  g = open(outfile,'w')
+  g.write(retstr)
+  g.close()
 
 main()
