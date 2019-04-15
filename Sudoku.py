@@ -116,18 +116,13 @@ def Process(infile,outfile,text):
   f = open(infile,'r')
   lines = f.read().split('\n')
   f.close()
-  h = open(text,'r')
-  darn = h.read().split('\n')
-  h.close()
+  text = text.split(',')
 
-  darn = "".join(darn)
-  print(darn)
-  textfile = darn.split(',')
-  print(textfile)
   board = []
   stop = 0
   skip = 0
   retstr = ""
+  global backtrack
   
   for i in lines:
     ctr = i.split(',')
@@ -138,19 +133,18 @@ def Process(infile,outfile,text):
       retstr += finalstr + "\n"
       finalstr = ""
       skip = 0
-      #global backtrack
+      print(backtrack)
       #retstr += str(backtrack)+  "\n"
 
       #totaltime = time.time()-start
       #print("totaltime: " + str(totaltime) + " seconds")
       #print("\n*******************************\n")
     if len(ctr) < 2:
-      global backtrack
       backtrack = 0
       stop = 0
       board = []
     elif len(ctr) == 3:
-      if ctr == textfile:
+      if ctr == text:
         skip = 3
       #retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
