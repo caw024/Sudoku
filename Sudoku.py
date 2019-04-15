@@ -110,23 +110,34 @@ def Sudoku(stack):
         
 
 def main():
-  Process(sys.argv[1], sys.argv[2])
+  Process(sys.argv[1], sys.argv[2], sys.argv[3])
   
-def Process(infile,outfile):
+def Process(infile,outfile,text):
   f = open(infile,'r')
   lines = f.read().split('\n')
   f.close()
+  h = open(text,'r')
+  darn = h.read().split('\n')
+  h.close()
+
+  darn = "".join(darn)
+  print(darn)
+  textfile = darn.split(',')
+  print(textfile)
   board = []
   stop = 0
+  skip = 0
   retstr = ""
+  
   for i in lines:
     ctr = i.split(',')
-    if stop == 9:
+    if stop == 9 and skip == 3:
       #start = time.time()
       Sudoku( [board] )
       global finalstr
       retstr += finalstr + "\n"
       finalstr = ""
+      skip = 0
       #global backtrack
       #retstr += str(backtrack)+  "\n"
 
@@ -139,7 +150,8 @@ def Process(infile,outfile):
       stop = 0
       board = []
     elif len(ctr) == 3:
-      pass
+      if ctr == textfile:
+        skip = 3
       #retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
