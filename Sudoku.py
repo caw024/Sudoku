@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import time
 
 backtrack = 0
 finalstr = ""
@@ -78,10 +79,17 @@ def Sudoku(stack):
   #gets first occurence of _
   while ctr < 81 and currentpuzzle[ctr] != '_':
     ctr += 1
+  following = ctr
+  while following < 81:
+    goodset = check(currentpuzzle,ctr)
+    if len(goodset) == 1:
+      currentpuzzle = currentpuzzle[:ctr] + [goodset.pop()] + currentpuzzle[ctr+1:]
+    following += 1
   #return boolean and associated puzzle
   if ctr == 81:
     global finalstr
     finalstr += retSudoku(currentpuzzle)
+    print(retSudoku(currentpuzzle))
     return True
   #gets set of possibilities
   goodset = check(currentpuzzle,ctr)
@@ -97,7 +105,6 @@ def Sudoku(stack):
       newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
       tempstack = stack[:]
       tempstack.append(newpuzzle)
-      #print("size of temp stack: " + str(len(tempstack)))
 
       #print(x,y)
       if Sudoku(tempstack) == True:
@@ -110,43 +117,42 @@ def Sudoku(stack):
         
 
 def main():
-  Process(sys.argv[1], sys.argv[2], sys.argv[3])
+  Process(sys.argv[1], sys.argv[2])
   
-def Process(infile,outfile,text):
+def Process(infile,outfile):
   f = open(infile,'r')
   lines = f.read().split('\n')
   f.close()
-  text = text.split(',')
+  #text = text.split(',')
 
   board = []
   stop = 0
-  skip = 0
   retstr = ""
   global backtrack
   
   for i in lines:
     ctr = i.split(',')
-    if stop == 9 and skip == 3:
-      #start = time.time()
-      Sudoku( [board] )
+    if stop == 9:
+      start = time.time()
+      print( Sudoku( [board] ) )
       global finalstr
       retstr += finalstr + "\n"
       finalstr = ""
       skip = 0
-      print(backtrack)
-      #retstr += str(backtrack)+  "\n"
+      retstr += str(backtrack)+  "\n"
 
-      #totaltime = time.time()-start
-      #print("totaltime: " + str(totaltime) + " seconds")
-      #print("\n*******************************\n")
+      totaltime = time.time()-start
+      print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
+      retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
     if len(ctr) < 2:
       backtrack = 0
       stop = 0
       board = []
     elif len(ctr) == 3:
-      if ctr == text:
-        skip = 3
-      #retstr += ",".join(ctr) + "\n"
+      #if ctr == text:
+       # skip = 3
+      print(",".join(ctr))
+      retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1

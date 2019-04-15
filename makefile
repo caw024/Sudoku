@@ -1,3 +1,3 @@
 run: Sudoku.py
-	python3 Sudoku.py Sudoku-boards.txt output.txt A2-1,Medium-NYTimes,unsolved
+	python3 Sudoku.py Sudoku-boards-Master-dist.txt output.txt
 	cat output.txt
