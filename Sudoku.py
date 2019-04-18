@@ -1,10 +1,13 @@
 #!/usr/bin/python3
+#results of timing + backtrack: naive and smarter
 import sys
 import time
 
+#from hardest: 26,61,360
+
 backtrack = 0
 finalstr = ""
-
+check = 0
 
 #ctr tells you first occurence of '_'
 def check(puzzle,ctr):
@@ -42,6 +45,7 @@ def check(puzzle,ctr):
   badplaces.remove(0)
   badnums.remove(0)
 
+  #O(n^2) time (is it possible to reduce it?)
   #badplaces gives locations where ctr is part of the same clique
   for k in Cliques:
     if ctr in k:
@@ -70,8 +74,6 @@ def retSudoku(puzzle):
 def Sudoku(stack):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
-  if len(stack) == 0:
-    return False
     
   #gets current puzzle
   currentpuzzle = stack[len(stack)-1]
@@ -79,16 +81,20 @@ def Sudoku(stack):
   #gets first occurence of _
   while ctr < 81 and currentpuzzle[ctr] != '_':
     ctr += 1
-  following = ctr
-  while following < 81:
-    goodset = check(currentpuzzle,ctr)
-    if len(goodset) == 1:
-      currentpuzzle = currentpuzzle[:ctr] + [goodset.pop()] + currentpuzzle[ctr+1:]
-    following += 1
+  global check
+  if check == 0:
+    check = 1
+    following = ctr
+    while following < 81 and currentpuzzle[following] == '_':
+      goodset = check(currentpuzzle,following)
+      if len(goodset) == 1:
+        currentpuzzle = currentpuzzle[:ctr] + [goodset.pop()] + currentpuzzle[ctr+1:]
+      following += 1
+        
   #return boolean and associated puzzle
   if ctr == 81:
-    global finalstr
-    finalstr += retSudoku(currentpuzzle)
+    #global finalstr
+    #finalstr += retSudoku(currentpuzzle)
     print(retSudoku(currentpuzzle))
     return True
   #gets set of possibilities
@@ -98,23 +104,16 @@ def Sudoku(stack):
     return False
   else:
     #go through the possibilities and try every single one
+    #if 1, it's forced but can you force it elsewhere
     for k in goodset:
-      global backtrack
-      backtrack += 1
+      #global backtrack
+      #backtrack += 1
       #print(backtrack)
       newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
       tempstack = stack[:]
       tempstack.append(newpuzzle)
-
-      #print(x,y)
       if Sudoku(tempstack) == True:
         return
-      #x,y = Sudoku(tempstack)
-      #print(x,y)
-      #if x == True:
-        #print("backtrack: " + str(backtrack))
-        #return
-        
 
 def main():
   Process(sys.argv[1], sys.argv[2])
@@ -135,15 +134,15 @@ def Process(infile,outfile):
     if stop == 9:
       start = time.time()
       print( Sudoku( [board] ) )
-      global finalstr
-      retstr += finalstr + "\n"
+      #global finalstr
+      #retstr += finalstr + "\n"
       finalstr = ""
       skip = 0
-      retstr += str(backtrack)+  "\n"
+      #retstr += str(backtrack)+  "\n"
 
       totaltime = time.time()-start
       print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
-      retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
+      #retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
     if len(ctr) < 2:
       backtrack = 0
       stop = 0
@@ -152,13 +151,13 @@ def Process(infile,outfile):
       #if ctr == text:
        # skip = 3
       print(",".join(ctr))
-      retstr += ",".join(ctr) + "\n"
+      #retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
 
-  g = open(outfile,'w')
-  g.write(retstr)
-  g.close()
+  #g = open(outfile,'w')
+  #g.write(retstr)
+  #g.close()
 
 main()
