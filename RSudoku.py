@@ -1,6 +1,13 @@
 #!/usr/bin/python3
+#results of timing + backtrack: naive and smarter
 import sys
 import time
+
+#from hardest: 26,61,360
+
+backtrack = 0
+finalstr = ""
+check = 0
 
 #ctr tells you first occurence of '_'
 def check(puzzle,ctr):
@@ -38,6 +45,7 @@ def check(puzzle,ctr):
   badplaces.remove(0)
   badnums.remove(0)
 
+  #O(n^2) time (is it possible to reduce it?)
   #badplaces gives locations where ctr is part of the same clique
   for k in Cliques:
     if ctr in k:
@@ -57,87 +65,99 @@ def retSudoku(puzzle):
   ctr = 0
   retstr = ""
   while ctr < 75:
+    #print( ",".join(puzzle[ctr:ctr+9]) )
     retstr += ",".join(puzzle[ctr:ctr+9]) + "\n"
     ctr += 9
   return retstr
 
   
 def Sudoku(stack):
+  global backtrack
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
-  STATE = 'find_next_cell'
-  goodset = 0
-  backtrack = 0
-  cell = 0
-  while True:
-    #gets current puzzle
-    currentpuzzle = stack[len(stack)-1]
-    #shouldn't change everytime
-    goodset = check(currentpuzzle,cell)
     
-    if STATE == "find_next_cell":
-      #gets first occurence of _
-      cell = 0
-      while cell < 81 and currentpuzzle[cell] != '_':
-        cell += 1
-        #return boolean and associated puzzle
-      if cell == 81:
-        return retSudoku(currentpuzzle)
-
-      STATE = 'new_cell'
-      continue
-      #if set is 0, del possibility, Sudoku keeps moving on with possibilities
-
-    if STATE == "new_cell":
-      #gets set of possibilities
-      if len(goodset) == 0:
-        STATE = 'backtrac'
-      else:
-        #adds to stack
-        guessval = goodset.pop()
-        newpuzzle = currentpuzzle[:cell] + [guessval] + currentpuzzle[cell+1:]
-        tempstack = stack[:]
-        tempstack.append(newpuzzle)
-        STATE = 'find_next_cell'
-      continue
-
-    if STATE == "backtrac":
-      #bad values, go back + remove
-      backtrack += 1
-      del stack[len(stack)-1]
-      STATE = 'find_next_cell'
-      continue
+  #gets current puzzle
+  currentpuzzle = stack[len(stack)-1]
+  ctr = 0
+  #gets first occurence of _
+  while ctr < 81 and currentpuzzle[ctr] != '_':
+    ctr += 1
+  global check
+  if check == 0:
+    check = 1
+    following = ctr
+    while following < 81 and currentpuzzle[following] == '_':
+      goodset = check(currentpuzzle,following)
+      if len(goodset) == 1:
+        currentpuzzle = currentpuzzle[:ctr] + [goodset.pop()] + currentpuzzle[ctr+1:]
+      following += 1
         
+  #return boolean and associated puzzle
+  if ctr == 81:
+    #global finalstr
+    #finalstr += retSudoku(currentpuzzle)
+    print(retSudoku(currentpuzzle))
+    print("backtrack: " + str(backtrack))
+    return
+  #gets set of possibilities
+  goodset = check(currentpuzzle,ctr)
+  #if set is 0, del possibility, Sudoku keeps moving on with possibilities
+  if len(goodset) == 0:
+    return 
+  else:
+    #go through the possibilities and try every single one
+    #if 1, it's forced but can you force it elsewhere
+    for k in goodset:
+      backtrack += 1
+      #print(backtrack)
+      newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
+      tempstack = stack[:]
+      tempstack.append(newpuzzle)
+      Sudoku(tempstack)
 
 def main():
-  Process(sys.argv[1])
+  Process(sys.argv[1], sys.argv[2])
   
-def Process(infile):
+def Process(infile,outfile):
   f = open(infile,'r')
   lines = f.read().split('\n')
   f.close()
+  #text = text.split(',')
+
   board = []
   stop = 0
   retstr = ""
+  global backtrack
+  
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
       start = time.time()
-      retstr += Sudoku( [board] )
+      Sudoku( [board] )
+      #global finalstr
+      #retstr += finalstr + "\n"
+      finalstr = ""
+      skip = 0
+      #retstr += str(backtrack)+  "\n"
+
       totaltime = time.time()-start
-      #print("totaltime: " + str(totaltime) + " seconds")
-      #print("\n*******************************\n")
-    if len(ctr) < 2:
-      global backtrack
+      print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
+      #retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
+    elif len(ctr) < 2:
       backtrack = 0
       stop = 0
       board = []
     elif len(ctr) == 3:
-      retstr += ",".join(ctr) + "\n"
+      #if ctr == text:
+       # skip = 3
+      print(",".join(ctr))
+      #retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
-  print(retstr)
-  return retstr
+
+  #g = open(outfile,'w')
+  #g.write(retstr)
+  #g.close()
 
 main()
