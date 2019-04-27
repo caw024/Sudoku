@@ -97,7 +97,7 @@ def Sudoku(stack):
     #global finalstr
     #finalstr += retSudoku(currentpuzzle)
     print(retSudoku(currentpuzzle))
-    print("backtrack: " + str(backtrack))
+    #print("backtrack: " + str(backtrack))
     return
   #gets set of possibilities
   goodset = check(currentpuzzle,ctr)
@@ -128,36 +128,36 @@ def Process(infile,outfile):
   stop = 0
   retstr = ""
   global backtrack
+  global finalstr
   
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
       start = time.time()
       Sudoku( [board] )
-      #global finalstr
-      #retstr += finalstr + "\n"
+      retstr += finalstr + "\n"
       finalstr = ""
       skip = 0
-      #retstr += str(backtrack)+  "\n"
+      retstr += str(backtrack) + "\n"
 
       totaltime = time.time()-start
-      print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
-      #retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
-    elif len(ctr) < 2:
+      #print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
+      retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
       backtrack = 0
       stop = 0
       board = []
+
     elif len(ctr) == 3:
       #if ctr == text:
        # skip = 3
-      print(",".join(ctr))
-      #retstr += ",".join(ctr) + "\n"
+      #print(",".join(ctr))
+     retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
 
-  #g = open(outfile,'w')
-  #g.write(retstr)
-  #g.close()
+  g = open(outfile,'w')
+  g.write(retstr)
+  g.close()
 
 main()

@@ -66,21 +66,62 @@ def retSudoku(puzzle):
 
 NEW_CELL = 0
 BACKTRAC = 1
+FORCED = 2
 
 def Sudoku(board):
   #make a stack to check if state is good or bad
   #if no possibilities, pop stack and check next
   backtrack = 0
   stack = []
-  stack.append([board,[0],-1])
-  state = NEW_CELL
+  
+  myctr = 0
+  while myctr < 81 and board[myctr] != '_':
+   myctr += 1
+  guesses = check(board,myctr)
+   
+  stack.append([board,guesses,myctr])
+  state = FORCED
+  #try state = NEW_CELL instead
   visitedctr = []
   case = 0
     
   #gets current puzzle
   while True:
-    currentpuzzle = stack[len(stack)-1][0]
+    currentpuzzle = stack[len(stack)-1][0][:]
 
+    if state == FORCED:
+      #we have currentpuzzle we want to force
+      ctr = 0
+      done = "yes"
+      while ctr < 81:
+        if currentpuzzle[ctr] == '_':
+          goodlist = check(currentpuzzle,ctr)
+          if len(goodlist) == 0:
+            #print("bad index at " + str(ctr) )
+            #print("\nbacktracking")
+            state = BACKTRAC
+            break
+          elif len(goodlist) == 1:
+            done = "no"
+            #print("forcing move:")
+            #print("before:")
+            #print(retSudoku(currentpuzzle) )
+
+            currentpuzzle = currentpuzzle[:ctr] + [goodlist[0]] + currentpuzzle[ctr+1:]
+            #print("at index: " + str(ctr) )
+            #print("after:")
+            #print(retSudoku(currentpuzzle) )
+        ctr += 1
+     
+      if state != BACKTRAC:
+        #print("went through puzzle")  
+        stack[len(stack)-1][0] = currentpuzzle
+        if done == "yes":
+          #print("finding new cell")
+          state = NEW_CELL
+      continue
+        
+        
     if state == NEW_CELL:
       #print("new cell puzzle:\n" + retSudoku(currentpuzzle))
       ctr = 0
@@ -90,8 +131,6 @@ def Sudoku(board):
         
       #return boolean and associated puzzle
       if ctr == 81:
-        #print(retSudoku(currentpuzzle))
-        #print("number of backtracks: " + str(backtrack)) + "\n"
         break
 
       #print("ctr: " + str(ctr))
@@ -122,6 +161,7 @@ def Sudoku(board):
         newpuzzle = currentpuzzle[:ctr] + [k] + currentpuzzle[ctr+1:]
         #print("new puzzle:\n" + retSudoku(newpuzzle))
         stack.append([newpuzzle,goodlist,ctr])
+        state = FORCED
       continue
   
     if state == BACKTRAC:
@@ -135,29 +175,27 @@ def Sudoku(board):
         #print("visited ctr:")
         #print(visitedctr)
 
-      pastworkingpuzzle = stack[len(stack)-1][0][:]
       goodlist = stack[len(stack)-1][1][:]
       pastctr = stack[len(stack)-1][2]
+
+      del stack[len(stack)-1]
+      #undoes all forced changes
+      pastworkingpuzzle = stack[len(stack)-1][0][:]
+      
       #print("goodlist before deletion")
       #print(goodlist)
       k = goodlist[0]
       del goodlist[0]
       newpuzzle = pastworkingpuzzle[:pastctr] + [k] + pastworkingpuzzle[pastctr+1:]
-      del stack[len(stack)-1]
       stack.append([newpuzzle,goodlist,pastctr])
       #print("ending backtrack")
 
       #print(backtrack)
-      state = NEW_CELL
+      state = FORCED
       continue
-  print(retSudoku(currentpuzzle) + "\nbacktrack: " + str(backtrack) )
   return retSudoku(currentpuzzle) + "\nbacktrack: " + str(backtrack) 
 
 
-      #you have to store (i) current working board, (ii) keep adding and removing to state per guess, (iii) keeping track of which ctr is last usable + guesses of it
-      #idea: iterate through board and get pos of all "_"
-      #from the _ you are on, keep track of what guesses are available and remove guesses one at time
-      #if no guesses work, delete state and go back to modify value
 
 def main():
   Process(sys.argv[1], sys.argv[2])
@@ -178,17 +216,16 @@ def Process(infile,outfile):
       start = time.time()
       retstr += Sudoku(board)
       #skip = 0
-      #retstr += str(backtrack)+  "\n"
 
       totaltime = time.time()-start
-      print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
+      #print("totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n")
       retstr += "totaltime: " + str(totaltime) + " seconds" + "\n*******************************\n"
       stop = 0
       board = []
     elif len(ctr) == 3:
       #if ctr == text:
        # skip = 3
-      print(",".join(ctr))
+      #print(",".join(ctr))
       retstr += ",".join(ctr) + "\n"
     elif len(ctr) == 9:
       board.extend(ctr)
