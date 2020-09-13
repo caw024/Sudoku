@@ -35,7 +35,7 @@ def check(puzzle,ctr):
   [57,58,59,66,67,68,75,76,77],\
   [60,61,62,69,70,71,78,79,80]\
   ]
-  
+
   badplaces = []
   badnums = []
 
@@ -46,13 +46,13 @@ def check(puzzle,ctr):
       for places in k:
         if places != ctr:
           badplaces.append(places)
-          
+
   #gives all badnums based on bad places in puzzle
   for a in badplaces:
     if puzzle[a] != '_':
       badnums.append(puzzle[a])
   possible = ['1','2','3','4','5','6','7','8','9']
-  return [nums for nums in possible if nums not in badnums]
+  return [num for num in possible if num not in badnums]
 
 
 def retSudoku(puzzle):
@@ -76,7 +76,7 @@ def Sudoku(board):
   state = NEW_CELL
   visitedctr = []
   case = 0
-    
+
   #gets current puzzle
   while True:
     currentpuzzle = stack[len(stack)-1][0]
@@ -87,7 +87,7 @@ def Sudoku(board):
       #gets first occurence of _
       while ctr < 81 and currentpuzzle[ctr] != '_':
         ctr += 1
-        
+
       #return boolean and associated puzzle
       if ctr == 81:
         #print(retSudoku(currentpuzzle))
@@ -106,7 +106,7 @@ def Sudoku(board):
         visitedctr.append(ctr)
         case = 1
         goodlist = check(currentpuzzle,ctr)
-        
+
       if len(goodlist) == 0:
         #print("starting backtrack")
         if case == 1:
@@ -123,7 +123,7 @@ def Sudoku(board):
         #print("new puzzle:\n" + retSudoku(newpuzzle))
         stack.append([newpuzzle,goodlist,ctr])
       continue
-  
+
     if state == BACKTRAC:
       while len( stack[len(stack)-1][1] ) == 0:
         backtrack += 1
@@ -151,7 +151,7 @@ def Sudoku(board):
       state = NEW_CELL
       continue
   print(retSudoku(currentpuzzle) + "\nbacktrack: " + str(backtrack) )
-  return retSudoku(currentpuzzle) + "\nbacktrack: " + str(backtrack) 
+  return retSudoku(currentpuzzle) + "\nbacktrack: " + str(backtrack)
 
 
       #you have to store (i) current working board, (ii) keep adding and removing to state per guess, (iii) keeping track of which ctr is last usable + guesses of it
@@ -161,7 +161,7 @@ def Sudoku(board):
 
 def main():
   Process(sys.argv[1], sys.argv[2])
-  
+
 def Process(infile,outfile):
   f = open(infile,'r')
   lines = f.read().split('\n')
@@ -171,7 +171,7 @@ def Process(infile,outfile):
   board = []
   stop = 0
   retstr = ""
-  
+
   for i in lines:
     ctr = i.split(',')
     if stop == 9:
@@ -193,7 +193,7 @@ def Process(infile,outfile):
     elif len(ctr) == 9:
       board.extend(ctr)
       stop += 1
-  
+
   g = open(outfile,'w')
   g.write(retstr)
   g.close()
