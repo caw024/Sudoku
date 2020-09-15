@@ -1,0 +1,65 @@
+name,Easy-NYTimes,unsolved
+
+485
+totaltime: 0.00602412223815918 seconds
+*******************************
+name,Easy-NYTimes,solved
+
+0
+totaltime: 0.00023794174194335938 seconds
+*******************************
+name,Medium-NYTimes,unsolved
+
+35172
+totaltime: 0.45226597785949707 seconds
+*******************************
+name,Medium-NYTimes,solved
+
+0
+totaltime: 0.000308990478515625 seconds
+*******************************
+name,Hard-NYTimes,unsolved
+
+49582
+totaltime: 0.7114014625549316 seconds
+*******************************
+name,Hard-NYTimes,solved
+
+0
+totaltime: 0.0002925395965576172 seconds
+*******************************
+name,WebSudoku-Hard,unsolved
+
+53859
+totaltime: 0.9290502071380615 seconds
+*******************************
+name,WebSudoku-Hard,solved
+
+0
+totaltime: 0.00028896331787109375 seconds
+*******************************
+name,WebSudoku-Evil,unsolved
+
+16768
+totaltime: 0.23527097702026367 seconds
+*******************************
+name,WebSudoku-Evil,solved
+
+0
+totaltime: 0.00030803680419921875 seconds
+*******************************
+name,hardest-sudoku-telegraph,unsolved
+
+2068780
+totaltime: 25.25994324684143 seconds
+*******************************
+name,sudokugarden.de/files/100sudoku2-en.pdf-Nr-100,unsolved
+
+4730576
+totaltime: 56.69020175933838 seconds
+*******************************
+name,sudokugarden.de/files/100sudoku2-en.pdf-Nr-50,unsolved
+
+27170283
+totaltime: 350.57286643981934 seconds
+*******************************
