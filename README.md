@@ -1,11 +1,8 @@
 ## Sudoku Solver
 This Sudoku Solver solves sudoku puzzles using recursive backtracking. There are several heuristic approaches that are employed to speed up the solving pattern.
 
-## Screenshots
-Include logo/demo screenshot etc.
-
 ## Tech/framework used
-The solving process is written in Python and it will be deployed on the web using Flask.
+The solving process is written in Python
 
 ## How to run
 Head to directory
@@ -13,16 +10,5 @@ Run the makefile:
 
 ```run makefile```
 
-OR
-Run the following on your terminal:
-
-```export FLASK_APP=application.py```
-
-```flask run```
-
-paste ```https://127.0.0.1:5000/``` in your web browser
-
-When you are done, go back to the terminal and click ctrl+C to exit.
-
-
 ## Future  
+Rewrite code to be more pythonic
